@@ -61,20 +61,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       args = env_data.map { |k, v| "#{k}=#{v}" }
       box.vm.provision :shell, :path => 'provision.sh', args: args
 
-      box.vm.provider :virtualbox do |vbox|
-        vbox.customize ['modifyvm', :id, '--ioapic', 'on']
-        vbox.customize ['modifyvm', :id, '--cpus',   n['cpus']]
-        vbox.customize ['modifyvm', :id, '--memory', n['memory']]
-        vbox.customize ['modifyvm', :id, '--name',   n['name']]
-      end
-
-      box.vm.provider :libvirt do |libvirt|
-        libvirt.driver = 'kvm'
-        libvirt.nested = true
-        libvirt.cpus   = n['cpus']
-        libvirt.memory = n['memory']
-      end
-
       box.vm.provider :openstack do |os, override|
         os.openstack_auth_url = ENV['OS_AUTH_URL']
         os.username           = ENV['OS_USERNAME']
@@ -86,6 +72,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         os.networks           = 'public'
         override.ssh.username = 'centos'
         override.ssh.pty      = true
+      end
+
+      box.vm.provider :libvirt do |libvirt|
+        libvirt.driver = 'kvm'
+        libvirt.nested = true
+        libvirt.cpus   = n['cpus']
+        libvirt.memory = n['memory']
+      end
+
+      box.vm.provider :virtualbox do |vbox|
+        vbox.customize ['modifyvm', :id, '--ioapic', 'on']
+        vbox.customize ['modifyvm', :id, '--cpus',   n['cpus']]
+        vbox.customize ['modifyvm', :id, '--memory', n['memory']]
+        vbox.customize ['modifyvm', :id, '--name',   n['name']]
       end
     end
   end
