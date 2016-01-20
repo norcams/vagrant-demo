@@ -1,0 +1,85 @@
+# Default values for all nodes
+#
+#   These settings can be overridden per node in the
+#
+defaults:
+  box:       norcams/base
+  autostart: true
+  primary:   false
+  location:  vagrant
+  domain:    himlar.local
+  cpus:      2
+  memory:    2048
+  networks:
+    - mgmt
+    - transport1
+    - transport2
+
+#
+# Nodesets configuration example:
+#
+#   simple:
+#     -name: master
+#     -name: compute
+#
+#   This will configure two nodes with the following FQDNs:
+#     vagrant-master-box.himlar.local
+#     vagrant-compute-box.himlar.local
+#
+#   4nodes:
+#     -name: master
+#     -name c1
+#       role: compute
+#     -name c2
+#       role: compute
+#     -name gw
+#       role: gateway
+#
+#   This will configure four nodes with the following FQDNs:
+#     vagrant-master-box.himlar.local
+#     vagrant-compute-c1.himlar.local
+#     vagrant-compute-c2.himlar.local
+#     vagrant-gateway-gw.himlar.local
+#
+nodesets:
+  all:
+    - name: login
+    - name: controller
+    - name: foreman
+    - name: master
+    - name: compute
+    - name: cephmon
+    - name: storage
+    - name: db
+    - name: proxy
+  net:
+    - name: master
+    - name: c1
+      role: compute
+    - name: c2
+      role: compute
+    - name: gw
+      box: norcams/net
+  consul:
+    - name: com1
+      role: compute
+    - name: com2
+      role: compute
+    - name: con1
+      role: controller
+    - name: con2
+      role: controller
+    - name: con3
+      role: controller
+
+networks:
+  mgmt:
+    net:         10.0.3
+    auto_config: true
+  transport1:
+    net:         10.4.0
+    auto_config: true
+  transport2:
+    net:         10.5.0
+    auto_config: true
+
